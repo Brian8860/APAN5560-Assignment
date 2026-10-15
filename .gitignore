@@ -8,3 +8,16 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# CIFAR-10 dataset
+data/
+
+# macOS
+.DS_Store

@@ -1,11 +1,15 @@
 [project]
 name = "sps-genai"
 version = "0.1.0"
-description = "Add your description here"
+description = "CNN image classification and word embedding API for APAN 5560"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.142.0",
+    "pillow>=12.3.0",
+    "python-multipart>=0.0.32",
     "spacy>=3.8.16",
+    "torch>=2.14.1",
+    "torchvision>=0.29.1",
     "uvicorn[standard]>=0.54.0",
 ]
