@@ -26,7 +26,7 @@ cnn_model = get_model("CNN")
 cnn_model = load_model(cnn_model, filepath=MODEL_PATH, device="cpu")
 
 image_transform = transforms.Compose([
-    transforms.Resize((32, 32)),
+    transforms.Resize((64, 64)),
     transforms.ToTensor(),
     transforms.Normalize(
         mean=(0.5, 0.5, 0.5),
@@ -46,7 +46,9 @@ def calculate_embedding(input_word):
 
 @app.get("/")
 def read_root():
-    return {"message": "FastAPI word embedding and CNN classification API is running"}
+    return {
+        "message": "FastAPI word embedding and CNN classification API is running"
+    }
 
 
 @app.post("/embedding")

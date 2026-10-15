@@ -13,12 +13,19 @@ The application has two main endpoints:
 
 ## CNN Model
 
-The model uses:
-- Two convolutional layers with ReLU and MaxPooling
-- One fully connected hidden layer
-- One output layer for 10 classes
+The CNN follows the architecture given in Assignment 2.
 
-The input images are 32 x 32 RGB images.
+- Input: 64 x 64 RGB image
+- Conv2d: 16 filters, kernel size 3, stride 1, padding 1
+- ReLU + MaxPooling (2 x 2)
+- Conv2d: 32 filters, kernel size 3, stride 1, padding 1
+- ReLU + MaxPooling (2 x 2)
+- Flatten
+- Fully connected layer: 8192 to 100
+- ReLU
+- Output layer: 100 to 10
+
+The model predicts one of the 10 CIFAR-10 classes.
 
 ## Training Results
 
@@ -33,25 +40,27 @@ Training settings:
 
 | Epoch | Loss | Accuracy |
 |-------|------|----------|
-| 1 | 1.3645 | 50.90% |
-| 2 | 0.9866 | 65.07% |
-| 3 | 0.8233 | 70.99% |
-| 4 | 0.7103 | 74.93% |
-| 5 | 0.6100 | 78.72% |
+| 1 | 1.4081 | 49.71% |
+| 2 | 1.1070 | 60.55% |
+| 3 | 0.9571 | 66.27% |
+| 4 | 0.8287 | 70.80% |
+| 5 | 0.7104 | 74.78% |
 
-Final Test Accuracy: **72.20%**
+Final Test Loss: **1.0260**
+
+Final Test Accuracy: **64.97%**
 
 The trained model is saved in `models/cnn_model.pth`.
 
 ## How to Run
 
-### 1. Build the Docker image
+### 1. Build the Docker Image
 
 ```bash
 docker build -t apan5560-assignment2 .
 ```
 
-### 2. Run the Docker container
+### 2. Run the Docker Container
 
 ```bash
 docker run --rm -p 8000:80 apan5560-assignment2
@@ -85,6 +94,8 @@ Example:
 4. Click "Execute".
 
 The API returns the predicted class and confidence score.
+
+Uploaded images are resized to 64 x 64 before classification.
 
 ## Model Training
 

@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
@@ -13,17 +11,10 @@ CIFAR10_CLASSES = (
 def get_data_loader(data_dir="data", batch_size=64, train=True):
     """
     Create a DataLoader for the CIFAR-10 dataset.
-
-    Args:
-        data_dir: Directory used to store the dataset.
-        batch_size: Number of images per batch.
-        train: True for training data, False for test data.
-
-    Returns:
-        PyTorch DataLoader.
     """
 
     transform = transforms.Compose([
+        transforms.Resize((64, 64)),
         transforms.ToTensor(),
         transforms.Normalize(
             mean=(0.5, 0.5, 0.5),
@@ -32,7 +23,7 @@ def get_data_loader(data_dir="data", batch_size=64, train=True):
     ])
 
     dataset = datasets.CIFAR10(
-        root=str(Path(data_dir)),
+        root=data_dir,
         train=train,
         download=True,
         transform=transform
