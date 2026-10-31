@@ -21,3 +21,12 @@ data/
 
 # macOS
 .DS_Store
+
+# Old GAN model and smoke tests
+models/mnist_gan.pth
+models/smoke.pth
+models/smoke_v2.pth
+samples/mnist_gan/
+samples/smoke/
+samples/smoke_v2/
+samples/test_grid.png

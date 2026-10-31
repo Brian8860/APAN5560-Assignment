@@ -1,107 +1,83 @@
-# APAN 5560 - Assignment 2: CNN
+## Assignment 3: MNIST GAN
 
-## Overview
+This assignment extends the existing FastAPI application with a GAN that generates 28 × 28 grayscale handwritten digit images.
 
-This project extends Assignment 1 by adding a CNN image classifier
-to the existing FastAPI application.
+### Architecture
 
-The CNN is built using PyTorch and trained on the CIFAR-10 dataset.
+Generator:
+- Input: a 100-dimensional noise vector.
+- Linear layer: 100 → 7 × 7 × 128, followed by reshape.
+- ConvTranspose2d: 128 → 64, kernel size 4, stride 2, padding 1.
+- BatchNorm2d and ReLU.
+- ConvTranspose2d: 64 → 1, kernel size 4, stride 2, padding 1.
+- Tanh output activation.
 
-The application has two main endpoints:
-- `/embedding`: Generate word embeddings using spaCy.
-- `/classify`: Classify uploaded images using the CNN.
+Discriminator:
+- Input: a 1 × 28 × 28 image.
+- Conv2d: 1 → 64, kernel size 4, stride 2, padding 1.
+- LeakyReLU with slope 0.2.
+- Conv2d: 64 → 128, kernel size 4, stride 2, padding 1.
+- BatchNorm2d and LeakyReLU with slope 0.2.
+- Flatten and Linear layer to one output logit.
 
-## CNN Model
 
-The CNN follows the architecture given in Assignment 2.
+### Training
 
-- Input: 64 x 64 RGB image
-- Conv2d: 16 filters, kernel size 3, stride 1, padding 1
-- ReLU + MaxPooling (2 x 2)
-- Conv2d: 32 filters, kernel size 3, stride 1, padding 1
-- ReLU + MaxPooling (2 x 2)
-- Flatten
-- Fully connected layer: 8192 to 100
-- ReLU
-- Output layer: 100 to 10
+- Dataset: MNIST training set, 60,000 images.
+- Pixel normalization: [-1, 1].
+- Batch size: 64.
+- Epochs: 20.
+- Optimizer: separate Adam optimizers for both networks.
+- Learning rate: 0.0002.
+- Adam betas: (0.5, 0.999).
+- Device used: CPU.
 
-The model predicts one of the 10 CIFAR-10 classes.
+Install dependencies:
 
-## Training Results
+    uv sync
 
-Dataset: CIFAR-10
+Run a short training check:
 
-Training settings:
-- Optimizer: Adam
-- Learning rate: 0.001
-- Batch size: 64
-- Epochs: 5
-- Loss function: CrossEntropyLoss
+    uv run python train_gan.py --smoke
 
-| Epoch | Loss | Accuracy |
-|-------|------|----------|
-| 1 | 1.4081 | 49.71% |
-| 2 | 1.1070 | 60.55% |
-| 3 | 0.9571 | 66.27% |
-| 4 | 0.8287 | 70.80% |
-| 5 | 0.7104 | 74.78% |
+Train the full model:
 
-Final Test Loss: **1.0260**
+    uv run python train_gan.py --epochs 20
 
-Final Test Accuracy: **64.97%**
+Each invocation starts training from scratch.
 
-The trained model is saved in `models/cnn_model.pth`.
+The final weights are saved to `models/mnist_gan_v2.pth`. Sample grids are saved after each epoch in `samples/mnist_gan_v2/`.
 
-## How to Run
+### Results and Limitations
 
-### 1. Build the Docker Image
+The trained generator produces multiple recognizable handwritten digit shapes, although some samples remain distorted or ambiguous. Visual quality fluctuated across epochs; epoch 20 was not consistently clearer than epoch 9.
 
-```bash
-docker build -t apan5560-assignment2 .
-```
+This is an unconditional GAN: users can change the random seed, but cannot request a specific digit.
 
-### 2. Run the Docker Container
+### Run the API Locally
 
-```bash
-docker run --rm -p 8000:80 apan5560-assignment2
-```
+    uv run uvicorn app.main:app --reload --port 8000
 
-### 3. Open FastAPI
-
-Go to:
+Open the interactive API documentation at:
 
 http://127.0.0.1:8000/docs
 
-## API Testing
+The existing `/embedding` and `/classify` routes remain available. The embedding route additionally requires the spaCy `en_core_web_lg` model.
 
-### POST /embedding
+### Generate Images
 
-Enter a word to generate its embedding vector.
+Endpoint: `GET /generate`
 
-Example:
+Parameters:
+- `num_samples`: number of images, from 1 to 100; default 25.
+- `seed`: random seed, from 0 to 4294967295; default 42.
 
-```json
-{
-  "word": "hello"
-}
-```
+The response is a PNG image grid.
 
-### POST /classify
+Example requests:
 
-1. Select `/classify` in FastAPI.
-2. Click "Try it out".
-3. Upload a JPG or PNG image.
-4. Click "Execute".
+http://127.0.0.1:8000/generate?num_samples=25&seed=42
 
-The API returns the predicted class and confidence score.
+http://127.0.0.1:8000/generate?num_samples=25&seed=123
 
-Uploaded images are resized to 64 x 64 before classification.
-
-## Model Training
-
-To retrain the CNN:
-
-```bash
-uv sync
-uv run python train.py
-```
+Both requests were tested locally and returned different image grids. Using the same seed with the same weights and environment reproduces the same output.
