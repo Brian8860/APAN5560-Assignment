@@ -1,28 +1,19 @@
-# Python-generated files
+# Python environment and generated files
+.venv/
 __pycache__/
-*.py[oc]
+*.py[cod]
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
 
-# Virtual environments
-.venv
-
-# Python cache
-__pycache__/
-*.py[cod]
-
-# Virtual environment
-.venv/
-
-# CIFAR-10 dataset
+# Downloaded datasets
 data/
 
 # macOS
 .DS_Store
 
-# Old GAN model and smoke tests
+# Old experiments and smoke tests
 models/mnist_gan.pth
 models/smoke.pth
 models/smoke_v2.pth

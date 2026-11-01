@@ -1,8 +1,7 @@
 [project]
 name = "sps-genai"
 version = "0.1.0"
-description = "CNN image classification and word embedding API for APAN 5560"
-readme = "README.md"
+description = "Word embedding, CNN classification, and MNIST GAN API"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi[standard]>=0.142.0",

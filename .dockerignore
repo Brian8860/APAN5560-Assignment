@@ -1,0 +1,11 @@
+.git/
+.venv/
+**/__pycache__/
+**/*.pyc
+**/.DS_Store
+data/
+samples/
+
+models/mnist_gan.pth
+models/smoke.pth
+models/smoke_v2.pth

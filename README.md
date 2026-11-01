@@ -1,4 +1,4 @@
-## Assignment 3: MNIST GAN
+# Assignment 3: MNIST GAN
 
 This assignment extends the existing FastAPI application with a GAN that generates 28 × 28 grayscale handwritten digit images.
 
@@ -79,5 +79,3 @@ Example requests:
 http://127.0.0.1:8000/generate?num_samples=25&seed=42
 
 http://127.0.0.1:8000/generate?num_samples=25&seed=123
-
-Both requests were tested locally and returned different image grids. Using the same seed with the same weights and environment reproduces the same output.
